@@ -6,97 +6,269 @@ var game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
 var toybox;
 var settings = {
     gravity: 980,
-    demoMode: true,
-    plugins: ["alien", "button", "fireball", "slime", "jelly", "backdrop"]
+    demoMode:true,
+    plugins: ["alien", "platform", "coin", "bullet", "backdrop", "button", "spikes"]
 };
+var player;
 
 function preload() {
     toybox = new Toybox(game, settings);
     toybox.preload();
+    game.load.spritesheet("spacebackdrop", "space.jpg", 256, 128);
 }
-var counter = 0;
 
-function spawnJelly() {
-    toybox.add.jelly({
-      startingX: 700
-    });
-    counter+=1;
-}
-var playerOptions
 
 function create() {
-    toybox.create();
-    playerOptions = {
-        startingX : 50,
-        startingY: 100,
-        color: "green",
-        jumpForce: 400,
-        speed: 100,
-        scale: 1
-    };
-    mainPlayer = toybox.add.alien(playerOptions);
-    spawnJelly();
-  toybox.add.button({
-     startingX: 100,
-     startingY: 70,
-     onPress: spawnAFireball
+  toybox.create();
+ 
+toybox.add.spikes({
+    startingX: 445,
+    startingY: 475,
+    color: "blue"
+})
 
-  });
-  toybox.add.button({
-     startingX: 500,
-     startingY:10,
-     onPress: spawnASlime
+ 
+toybox.add.spikes({
+    startingX: 275,
+    startingY: 475,
+    color: "blue"
+})
+ 
+toybox.add.spikes({
+    startingX: 100,
+    startingY: 475,
+    color: "blue"
+}) 
+
+toybox.add.spikes({
+    startingX: 445,
+    startingY: 450,
+    color: "blue"
+}) 
+ 
+toybox.add.bullet({
+    startingX: game.world.width,
+    speedVector: new Phaser.Point( -25,25)
+    
+}) ;
+
+backdrop = toybox.add.backdrop({
+    spriteName: 'spacebackdrop'
+})
+
+function wingame(){
+    alert("YOU WIN!")
+}
+
+
+toybox.add.button({
+    startingX: 585,
+    startingY: 420,
+    onPress: wingame,
+    color: "blue"
+})
+
+ toybox.add.coin({
+      startingX: 45,
+      startingY: 400,
+      allowGravity: false,
+     killAge: false
+      
+  })  
+  
+
+  
+  toybox.add.coin({
+      startingX: 65,
+      startingY: 400,
+      allowGravity: false,
+     killAge: false
+      
+  })
+  
+  //  toybox.add.coin({
+ //     startingX: 85,
+  //    startingY: 380,
+    //  allowGravity: false,
+  //   killAge: false
+      
+ // })
+  
+    toybox.add.coin({
+      startingX: 105,
+      startingY: 360,
+      allowGravity: false,
+     killAge: false
+      
+  })
+  
+  toybox.add.coin({
+      startingX: 125,
+      startingY: 360,
+      allowGravity: false,
+     killAge: false
+      
+  })
+  
+  toybox.add.coin({
+      startingX: 145,
+      startingY: 360,
+      allowGravity: false,
+     killAge: false
+      
+  })
+  
+//toybox.add.coin({
+ //    startingX: 165,
+ //     startingY: 340,
+ //    allowGravity: false,
+//    killAge: false
+      
+// })
+    
+toybox.add.coin({
+      startingX: 145,
+      startingY: 360,
+      allowGravity: false,
+     killAge: false
+      
+  })  
+  
+ toybox.add.coin({
+      startingX: 165,
+      startingY: 340,
+      allowGravity: false,
+     killAge: false
+      
+  }) 
+  
+  addCoin(
+      185,340);
+  
+  toybox.add.coin({
+      startingX: 205,
+      startingY: 340,
+      allowGravity: false,
+     killAge: false
+      
+  })
+  
+  function addCoin( coinX, coinY){
+         toybox.add.coin({
+          startingX: coinX,
+          startingY: coinY,
+         allowGravity: false,
+         killAge: false
+         })
+  }
+  
+  addCoin(
+      225, 310)
+  
+  addCoin(
+      245, 310)
+      
+      addCoin(
+          265, 310)
+      
+  addCoin(
+     455, 425)
+     
+     addCoin(480, 425)
+     
+     addCoin(355,395)
+     addCoin(390, 395)
+  
+  toybox.add.platform({
+      startingX: 50,
+      startingY: 475,
+      width: 50,
+      height: 35,
+      type: 6
   });
   
-  toybox.add.backdrop()
+  
+  toybox.add.platform({
+      startingX: 125,
+      startingY: 435,
+      width: 50,
+      height: 35,
+      type: 6
+  });
+ 
+  toybox.add.platform({
+      startingX:  200,
+      startingY: 395,
+      width: 50,
+      height: 35,
+      type: 6
+  });
+  
+   toybox.add.platform({
+      startingX:  275,
+      startingY: 355,
+      width: 50,
+      height: 35,
+      type: 6
+  });
+ 
+ toybox.add.platform({
+      startingX: 375,
+      startingY: 435,
+      width: 50,
+      height: 35,
+      type: 6
+  });
+ toybox.add.platform({
+      startingX: 475,
+      startingY: 475,
+      width: 50,
+      height: 35,
+      type: 6
+  });
+ 
+  player = toybox.add.alien({
+      controls: {
+          left: 37,
+                right: 39,
+                jump: 38,
+                fire: 17
+      },
+      color: "blue"
+  });
+  player.events.onUpdate.add(shoot, player);
 }
-
-    var missShot;
-
-function spawnAFireball() {
-        var random = Phaser.Math.between(0,1);
-    if (random == 1){
-    toybox.add.fireball({
-       startingX: 100
-    });   
-    }
-    else{
-   missShot = game.add.text(50, 100, "You missed.", { fill : "#ffffff"});
-    toybox.add.slime({
-        startingX: game.world.centerX, 
-    });
-    counter+=1;
-    }
+var canshoot= true;
+function shoot(){
+   if(player.controls.fire.isDown && canshoot){
+       toybox.add.bullet({
+        startingX: this.x+20,
+        startingY: this.y,
+        speedVector: new Phaser.Point( 50,0)
+        
+       })
+       canshoot= false;
+       game.time.events.add(
+           500, function(){
+              canshoot= true; 
+              
+           });
 }
-
-   var nothing;
-
-function spawnASlime() {
-        var randNumber = Phaser.Math.between(0,1);
-    if (randNumber == 1){
-        var newSlime = toybox.add.slime({
-            startingX: game.world.centerX,
-        });
-        newSlime.events.onKilled.add(function(){
-            counter--;
-        });
-        counter++;
-    }
-    else{
-   nothing = game.add.text(100, 50, "Nothing happened.", { fill : "#ffffff"});
-    }
     
-    }
-   
-function end() {
-   if (counter == 0){
-   alert("You won! Take your pomegranates and get out of here!");
-   }
-   else (counter == 1);
-    game.add.text(500, 60, "Kill the enemy.");  
+    
 }
 
-function update(){
+
+
+
+
+
+
+
+
+function update() {
     toybox.update();
-    end = 0;
 }
+
+
+
